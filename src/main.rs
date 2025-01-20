@@ -1,11 +1,4 @@
-use std::env;
-
-fn print_usage() {
-    println!("Usage: {} <command>", env::args().nth(0).unwrap());
-    println!("Commands:");
-    println!("  help, -h, --help: Print this help message");
-    println!("  wallpaper: Set the current wallpaper");
-}
+use clap::Command;
 
 fn set_wallpaper() {
     let result = utiltool::pick_file("/etc/nixos/common/wallpapers");
@@ -17,19 +10,13 @@ fn set_wallpaper() {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args =  Command::new("utiltool")
+        .about("A collection of utilities")
+        .subcommand(Command::new("wallpaper").about("Set the current wallpaper"))
+        .get_matches();
 
-    if args.len() <= 1 {
-        print_usage();
-        return;
-    }
-
-    match args[1].as_str() {
-        "help" | "-h" | "--help" => print_usage(),
-        "wallpaper" => set_wallpaper(),
-        _ => {
-            eprintln!("Unknown command: {}", args[1]);
-            print_usage();
-        }
+    match args.subcommand() {
+        Some(("wallpaper", _)) => set_wallpaper(),
+        _ => (),
     }
 }
