@@ -6,7 +6,7 @@ fn handle_utf8_error(data: &[u8]) -> Result<String, Box<dyn Error>> {
     Ok(from_utf8(data)?.to_string())
 }
 
-pub fn file_picker(initial_dir: &str) -> Result<Vec<String>, Box<dyn Error>> {
+pub fn pick_files(initial_dir: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let outp = Command::new("nnn")
         .args(&["-a", "-p", "-", initial_dir])
         .stdin(Stdio::inherit())
@@ -30,5 +30,20 @@ pub fn file_picker(initial_dir: &str) -> Result<Vec<String>, Box<dyn Error>> {
                 handle_utf8_error(outp.stdout.as_slice())?
             ).into()
         )
+    }
+}
+
+pub fn pick_file(initial_dir: &str) -> Result<String, Box<dyn Error>> {
+    match pick_files(initial_dir) {
+        Ok(mut files) => {
+            if files.len() == 1 {
+                Ok(files.remove(0))
+            } else if files.len() > 1 {
+                Err("More than one file picked".into()) // TODO handle this case
+            } else {
+                Err("No file picked".into())
+            }
+        },
+        Err(e) => Err(e),
     }
 }
