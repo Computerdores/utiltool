@@ -10,7 +10,7 @@ fn print_usage() {
 fn set_wallpaper() {
     let result = utiltool::pick_file("/etc/nixos/common/wallpapers");
     if let Ok(path) = result {
-        println!("Picked file: {}", path);
+        utiltool::set_wallpaper(&path).unwrap();
     } else {
         eprintln!("{}", result.unwrap_err());
     }
