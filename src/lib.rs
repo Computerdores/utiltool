@@ -49,7 +49,10 @@ pub fn pick_file(initial_dir: &str) -> Result<String, Box<dyn Error>> {
 }
 
 pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn Error>> {
-    // TODO handle wallpaper not being preloaded
+    Command::new("hyprctl")
+        .args(&["hyprpaper", "preload", path])
+        .spawn()?
+        .wait()?;
     Command::new("hyprctl")
         .args(&["hyprpaper", "wallpaper", format!(",{}", path).as_str()])
         .spawn()?
