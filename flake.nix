@@ -9,11 +9,12 @@
     outputs = { self, nixpkgs, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
         let
             pkgs = import nixpkgs { inherit system; };
+            cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
         in {
             # nix build or nix run functionality
             packages.default = pkgs.rustPlatform.buildRustPackage {
                 pname = "utiltool";
-                version = "0.1.0";
+                version = cargoToml.package.version;
 
                 src = pkgs.lib.cleanSource ./.;
 
@@ -21,9 +22,10 @@
 
                 nativeBuildInputs = [ pkgs.installShellFiles ];
                 
-                # Install shell completions
+                # Install shell completions (elv is also generated, but breaks installShellCompletion when trying to install it)
                 postInstall = ''
-                    installShellCompletion target/*/release/build/*/out/utiltool.{bash,fish,elv}
+                    installShellCompletion target/*/release/build/*/out/utiltool.{bash,fish}
+                    installShellCompletion --zsh target/*/release/build/*/out/_utiltool
                 '';
             };
 
