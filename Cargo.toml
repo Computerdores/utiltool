@@ -1,11 +1,13 @@
 [package]
 name = "utiltool"
+description = "A collection of utilities."
+authors = [ "Computerdores <jann.stute@protonmail.com>" ]
 version = "0.2.0"
 edition = "2021"
 
 [dependencies]
-clap = "*"
+clap = { version = ">=4.5.0", features = ["cargo"] }
 
 [build-dependencies]
-clap = "*"
-clap_complete = "*"
+clap = { version = ">=4.5.0", features = ["cargo"] }
+clap_complete = ">=4.5.0"

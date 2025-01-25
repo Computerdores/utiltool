@@ -1,7 +1,9 @@
-use clap::Command;
+use clap::{Command, command};
 
 pub fn build_cli() -> Command {
-    Command::new("utiltool")
-        .about("A collection of utilities")
-        .subcommand(Command::new("wallpaper").about("Set the current wallpaper"))
+    command!()
+        .subcommand(
+            Command::new("wallpaper")
+            .about("Set the current wallpaper (resets on reboot).")
+        )
 }
