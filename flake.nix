@@ -2,8 +2,8 @@
     description = "A personal utility tool for my custom DE.";
 
     inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs"; # Use the latest nixpkgs
-        flake-utils.url = "github:numtide/flake-utils"; # Utility library for flakes
+        nixpkgs.url = "github:NixOS/nixpkgs";
+        flake-utils.url = "github:numtide/flake-utils";
     };
 
     outputs = { self, nixpkgs, flake-utils }: flake-utils.lib.eachDefaultSystem (system:
@@ -18,6 +18,13 @@
                 src = pkgs.lib.cleanSource ./.;
 
                 cargoLock.lockFile = ./Cargo.lock;
+
+                nativeBuildInputs = [ pkgs.installShellFiles ];
+                
+                # Install shell completions
+                postInstall = ''
+                    installShellCompletion target/*/release/build/*/out/utiltool.{bash,fish,elv}
+                '';
             };
 
             # nix develop functionality

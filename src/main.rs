@@ -1,4 +1,4 @@
-use clap::Command;
+mod cli;
 
 fn set_wallpaper() {
     let result = utiltool::pick_file("/etc/nixos/common/wallpapers");
@@ -10,10 +10,7 @@ fn set_wallpaper() {
 }
 
 fn main() {
-    let args =  Command::new("utiltool")
-        .about("A collection of utilities")
-        .subcommand(Command::new("wallpaper").about("Set the current wallpaper"))
-        .get_matches();
+    let args = cli::build_cli().get_matches();
 
     match args.subcommand() {
         Some(("wallpaper", _)) => set_wallpaper(),
