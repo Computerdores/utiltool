@@ -26,6 +26,7 @@
                 postInstall = ''
                     installShellCompletion target/*/release/build/*/out/utiltool.{bash,fish}
                     installShellCompletion --zsh target/*/release/build/*/out/_utiltool
+                    installManPage target/*/release/build/*/out/man/*
                 '';
             };
 
