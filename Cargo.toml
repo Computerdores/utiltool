@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "*", features = ["cargo"] }
 
+
 [build-dependencies]
 clap = { version = "*", features = ["cargo"] }
 clap_complete = "*"
