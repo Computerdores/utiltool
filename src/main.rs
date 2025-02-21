@@ -14,6 +14,7 @@ fn main() {
 
     match args.subcommand() {
         Some(("wallpaper", _)) => set_wallpaper(),
+        None => cli::print_help(""),
         _ => (),
     }
 }
