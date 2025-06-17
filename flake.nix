@@ -44,6 +44,10 @@
                         extensions = [ "rust-src" ];
                     })
                 ];
+
+                shellHook = ''
+                    PS1="''${PS1/\\n/\\n(devenv) }"
+                '';
             };
         }
     );
