@@ -1,6 +1,6 @@
-use std::{env, error::Error, path::PathBuf, fs::create_dir};
 use clap::ValueEnum;
 use clap_complete::{generate_to, Shell};
+use std::{env, error::Error, fs::create_dir, path::PathBuf};
 
 include!("src/cli.rs");
 
@@ -14,8 +14,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut cli = build_cli();
     clap_mangen::generate_to(cli.clone(), &man_dir)?;
     for &shell in Shell::value_variants() {
-        generate_to(shell,&mut cli,"utiltool",&outdir)?;
+        generate_to(shell, &mut cli, "utiltool", &outdir)?;
     }
-    
+
     Ok(())
 }

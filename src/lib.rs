@@ -8,7 +8,10 @@ use crate::config::Config;
 
 fn create_temp_file() -> Result<String, Box<dyn Error>> {
     let temp_file = tempfile::NamedTempFile::new()?;
-    let path = temp_file.path().to_str().ok_or("Failed to convert path to string")?;
+    let path = temp_file
+        .path()
+        .to_str()
+        .ok_or("Failed to convert path to string")?;
     Ok(path.to_string())
 }
 
@@ -36,21 +39,20 @@ pub fn pick_files(cfg: &Config, initial_dir: &str) -> Result<Vec<String>, Box<dy
     delete_temp_file(temp_file.as_str())?;
 
     if outp.status.success() {
-        Ok(
-            outp.stdout.split(|&c| c == b'\n')
+        Ok(outp
+            .stdout
+            .split(|&c| c == b'\n')
             .map(|s| handle_utf8_error(s))
             .filter_map(Result::ok)
             .filter(|s| s.len() > 0)
-            .collect()
-        )
+            .collect())
     } else {
-        Err(
-            format!(
-                "nnn failed\nstderr: {:?}\nstdout: {:?}",
-                handle_utf8_error(outp.stderr.as_slice())?,
-                handle_utf8_error(outp.stdout.as_slice())?
-            ).into()
+        Err(format!(
+            "nnn failed\nstderr: {:?}\nstdout: {:?}",
+            handle_utf8_error(outp.stderr.as_slice())?,
+            handle_utf8_error(outp.stdout.as_slice())?
         )
+        .into())
     }
 }
 
@@ -64,7 +66,7 @@ pub fn pick_file(cfg: &Config, initial_dir: &str) -> Result<String, Box<dyn Erro
             } else {
                 Err("No file picked".into())
             }
-        },
+        }
         Err(e) => Err(e),
     }
 }

@@ -1,6 +1,6 @@
 mod cli;
 
-use utiltool::config::{self, Config};
+use utiltool::config::Config;
 
 fn set_wallpaper(cfg: &Config) {
     let result = utiltool::pick_file(cfg, "/etc/nixos/common/wallpapers");
@@ -14,7 +14,7 @@ fn set_wallpaper(cfg: &Config) {
 fn main() {
     let args = cli::build_cli().get_matches();
 
-    let config = config::read_config();
+    let config = Config::read();
 
     match args.subcommand() {
         Some(("wallpaper", _)) => set_wallpaper(&config),
