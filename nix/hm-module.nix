@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utiltoolPkg, ... }:
 
 let
     cfg = config.programs.utiltool;
@@ -8,8 +8,8 @@ in {
     };
 
     config = lib.mkIf cfg.enable {
-        home.packages = with pkgs; [
-            utiltool
+        home.packages = [
+            utiltoolPkg
         ];
     };
 }

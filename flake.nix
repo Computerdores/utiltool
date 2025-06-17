@@ -17,9 +17,8 @@
             overlays = [ (import rust-overlay) ];
             pkgs = import nixpkgs { inherit system overlays; };
             cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
-        in {
-            # nix build or nix run functionality
-            packages.default = pkgs.rustPlatform.buildRustPackage {
+
+            utiltoolPkg = pkgs.rustPlatform.buildRustPackage {
                 pname = "utiltool";
                 version = cargoToml.package.version;
 
@@ -36,6 +35,9 @@
                     installManPage target/*/release/build/*/out/man/*
                 '';
             };
+        in {
+            # nix build or nix run functionality
+            packages.default = utiltoolPkg;
 
             # nix develop functionality
             devShells.default = pkgs.mkShell {
@@ -51,6 +53,18 @@
             };
         }
     ) // {
-        homeManagerModules.default = import ./nix/hm-module.nix;
+        homeManagerModules.default = system:
+            let
+                pkgs = import nixpkgs {
+                    inherit system;
+                    overlays = [ (import rust-overlay) ];
+                };
+                utiltoolPkg = self.packages.${system}.default;
+            in
+            { config, ... }@args:
+            import ./nix/hm-module.nix ({
+                inherit pkgs utiltoolPkg;
+                lib = pkgs.lib;
+            } // args);
     };
 }
