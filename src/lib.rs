@@ -48,7 +48,7 @@ pub fn pick_files(cfg: &Config, initial_dir: &str) -> Result<Vec<String>, Box<dy
             .collect())
     } else {
         Err(format!(
-            "nnn failed\nstderr: {:?}\nstdout: {:?}",
+            "file picker script failed\nstderr: {:?}\nstdout: {:?}",
             handle_utf8_error(outp.stderr.as_slice())?,
             handle_utf8_error(outp.stdout.as_slice())?
         )
