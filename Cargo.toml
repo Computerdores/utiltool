@@ -2,7 +2,7 @@
 name = "utiltool"
 description = "A collection of utilities."
 authors = [ "Computerdores <jann.stute@protonmail.com>" ]
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 
 [dependencies]
