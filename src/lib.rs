@@ -6,37 +6,19 @@ use std::str::from_utf8;
 
 use crate::config::Config;
 
-fn create_temp_file() -> Result<String, Box<dyn Error>> {
-    let temp_file = tempfile::NamedTempFile::new()?;
-    let path = temp_file
-        .path()
-        .to_str()
-        .ok_or("Failed to convert path to string")?;
-    Ok(path.to_string())
-}
-
-fn delete_temp_file(path: &str) -> Result<(), Box<dyn Error>> {
-    std::fs::remove_file(path).map_err(|e| e.into())
-}
-
 fn handle_utf8_error(data: &[u8]) -> Result<String, Box<dyn Error>> {
     Ok(from_utf8(data)?.to_string())
 }
 
 pub fn pick_files(cfg: &Config, initial_dir: &str) -> Result<Vec<String>, Box<dyn Error>> {
-    let temp_file = create_temp_file()?;
-    std::fs::write(&temp_file, cfg.pick_file_script.as_bytes())?;
-
     let outp = Command::new("bash")
-        .args(&[&temp_file])
+        .args(&["-c", &cfg.pick_file_script])
         .current_dir(initial_dir)
         .stdin(Stdio::inherit())
         .stdout(Stdio::piped())
         .stderr(Stdio::inherit())
         .spawn()?
         .wait_with_output()?;
-
-    delete_temp_file(temp_file.as_str())?;
 
     if outp.status.success() {
         Ok(outp
