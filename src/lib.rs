@@ -66,3 +66,50 @@ pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn Error>> {
         .wait()?;
     Ok(())
 }
+
+fn run_script(script: &str, wait: bool) -> Result<(), Box<dyn Error>> {
+    let mut command = Command::new("bash")
+        .args(&["-c", script])
+        .stdin(Stdio::inherit())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .spawn()?;
+
+    if wait {
+        command.wait()?;
+    }
+
+    Ok(())
+}
+
+pub fn shutdown(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_shutdown_script, true)?;
+    Ok(())
+}
+
+pub fn reboot(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_reboot_script, true)?;
+    Ok(())
+}
+
+pub fn hibernate(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_lock_script, false)?;
+    run_script(&cfg.system_hibernate_script, true)?;
+    Ok(())
+}
+
+pub fn suspend(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_lock_script, false)?;
+    run_script(&cfg.system_suspend_script, true)?;
+    Ok(())
+}
+
+pub fn logout(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_logout_script, true)?;
+    Ok(())
+}
+
+pub fn lock(cfg: &Config) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.system_lock_script, true)?;
+    Ok(())
+}
