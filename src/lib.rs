@@ -1,6 +1,7 @@
 pub mod config;
 
 use std::error::Error;
+use std::path::Path;
 use std::process::{Command, Stdio};
 use std::str::from_utf8;
 
@@ -26,7 +27,8 @@ pub fn pick_files(cfg: &Config, initial_dir: &str) -> Result<Vec<String>, Box<dy
             .split(|&c| c == b'\n')
             .map(|s| handle_utf8_error(s))
             .filter_map(Result::ok)
-            .filter(|s| s.len() > 0)
+            .filter(|s| !s.is_empty())
+            .filter(|s| Path::new(s).is_file())
             .collect())
     } else {
         Err(format!(
