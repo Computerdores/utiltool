@@ -55,21 +55,17 @@ pub fn pick_file(cfg: &Config, initial_dir: &str) -> Result<String, Box<dyn Erro
     }
 }
 
-pub fn set_wallpaper(path: &str) -> Result<(), Box<dyn Error>> {
-    Command::new("hyprctl")
-        .args(&["hyprpaper", "preload", path])
-        .spawn()?
-        .wait()?;
-    Command::new("hyprctl")
-        .args(&["hyprpaper", "wallpaper", format!(",{}", path).as_str()])
-        .spawn()?
-        .wait()?;
+pub fn set_wallpaper(cfg: &Config, path: &str) -> Result<(), Box<dyn Error>> {
+    run_script(&cfg.wallpaper_script, true, vec![path])?;
     Ok(())
 }
 
-fn run_script(script: &str, wait: bool) -> Result<(), Box<dyn Error>> {
+fn run_script(script: &str, wait: bool, script_args: Vec<&str>) -> Result<(), Box<dyn Error>> {
+    let mut args = vec!["-c", script, "--"];
+    args.extend(script_args);
+
     let mut command = Command::new("bash")
-        .args(&["-c", script])
+        .args(args)
         .stdin(Stdio::inherit())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
@@ -83,33 +79,33 @@ fn run_script(script: &str, wait: bool) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn shutdown(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_shutdown_script, true)?;
+    run_script(&cfg.system_shutdown_script, true, vec![])?;
     Ok(())
 }
 
 pub fn reboot(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_reboot_script, true)?;
+    run_script(&cfg.system_reboot_script, true, vec![])?;
     Ok(())
 }
 
 pub fn hibernate(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_lock_script, false)?;
-    run_script(&cfg.system_hibernate_script, true)?;
+    run_script(&cfg.system_lock_script, false, vec![])?;
+    run_script(&cfg.system_hibernate_script, true, vec![])?;
     Ok(())
 }
 
 pub fn suspend(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_lock_script, false)?;
-    run_script(&cfg.system_suspend_script, true)?;
+    run_script(&cfg.system_lock_script, false, vec![])?;
+    run_script(&cfg.system_suspend_script, true, vec![])?;
     Ok(())
 }
 
 pub fn logout(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_logout_script, true)?;
+    run_script(&cfg.system_logout_script, true, vec![])?;
     Ok(())
 }
 
 pub fn lock(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_lock_script, true)?;
+    run_script(&cfg.system_lock_script, true, vec![])?;
     Ok(())
 }

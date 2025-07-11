@@ -5,6 +5,9 @@ pub struct Config {
     #[serde(default = "default_values::pick_file_script")]
     pub pick_file_script: String,
 
+    #[serde(default = "default_values::wallpaper_script")]
+    pub wallpaper_script: String,
+
     #[serde(default = "default_values::system_shutdown_script")]
     pub system_shutdown_script: String,
     #[serde(default = "default_values::system_reboot_script")]
@@ -26,6 +29,14 @@ pub mod default_values {
         yazi --chooser-file=$t
         cat $t
         rm $t
+        "
+        .to_string()
+    }
+
+    pub fn wallpaper_script() -> String {
+        r"
+        hyprctl hyprpaper preload $1 >/dev/null
+        hyprctl hyprpaper wallpaper ,$1 >/dev/null
         "
         .to_string()
     }

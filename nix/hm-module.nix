@@ -18,6 +18,16 @@ in {
             description = "A bash script to pick one or more files. Should output one file path per line to stdout.";
         };
 
+        wallpaper_script = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            example = ''
+                hyprctl hyprpaper preload $1 >/dev/null
+                hyprctl hyprpaper wallpaper ,$1 >/dev/null
+            '';
+            description = "A bash script to set the wallpaper. Will receive the path of the wallpaper as the first argument.";
+        };
+
         system = {
             shutdown_script = lib.mkOption {
                 type = lib.types.nullOr lib.types.str;

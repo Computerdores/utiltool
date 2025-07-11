@@ -2,10 +2,10 @@ mod cli;
 
 use utiltool::config::Config;
 
-fn set_wallpaper(cfg: &Config) {
+fn wallpaper_cmd(cfg: &Config) {
     let result = utiltool::pick_file(cfg, "/etc/nixos/common/wallpapers");
     if let Ok(path) = result {
-        utiltool::set_wallpaper(&path).unwrap();
+        utiltool::set_wallpaper(cfg, &path).unwrap();
     } else {
         eprintln!("{}", result.unwrap_err());
     }
@@ -17,7 +17,7 @@ fn main() {
     let config = Config::read();
 
     match args.subcommand() {
-        Some(("wallpaper", _)) => set_wallpaper(&config),
+        Some(("wallpaper", _)) => wallpaper_cmd(&config),
         Some(("system", sys_args)) => match sys_args.subcommand() {
             Some(("shutdown", _)) => utiltool::shutdown(&config).unwrap(),
             Some(("reboot", _)) => utiltool::reboot(&config).unwrap(),
