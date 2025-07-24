@@ -89,7 +89,6 @@ pub fn reboot(cfg: &Config) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn hibernate(cfg: &Config) -> Result<(), Box<dyn Error>> {
-    run_script(&cfg.system_lock_script, false, vec![])?;
     run_script(&cfg.system_hibernate_script, true, vec![])?;
     Ok(())
 }
